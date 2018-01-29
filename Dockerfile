@@ -1,7 +1,5 @@
 FROM python:alpine
 
-COPY pip.requirements.txt /pip.requirements.txt
-
 RUN apk add --no-cache libpng freetype libstdc++
 RUN apk add --no-cache --virtual .build-deps \
 	    gcc \
