@@ -1,10 +1,16 @@
-FROM python:3
+FROM python:alpine
 
 COPY pip.requirements.txt /pip.requirements.txt
 
-# ADD repositories /etc/apk/repositories # if install numpy with add instead of pip
-
-RUN pip install -r pip.requirements.txt
-	# apk --no-cache add musl-dev linux-headers gfortran g++ jpeg-dev zlib-dev cairo-dev \
-    #&& apk add py-matplotlib # better install with pip
-    #&& apk add --update py-numpy@community # better install with pip
+RUN apk add --no-cache libpng freetype libstdc++
+RUN apk add --no-cache --virtual .build-deps \
+	    gcc \
+	    build-base \
+	    python-dev \
+	    libpng-dev \
+	    musl-dev \
+	    freetype-dev
+RUN ln -s /usr/include/locale.h /usr/include/xlocale.h \
+	&& pip install numpy \
+	&& pip install matplotlib \
+	&& apk del .build-deps
